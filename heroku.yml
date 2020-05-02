@@ -1,0 +1,11 @@
+build:
+  docker:
+    web: Dockerfile.prod
+    celery: Dockerfile.prod
+run:
+  web: gunicorn project.wsgi --limit-request-line 8188 --log-file -
+  celery: celery worker --app=project --loglevel=info
+release:
+  image: web
+  command:
+    - ./release-tasks.sh

@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  redis:
+    image: redis
+
+  db:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+
+  backend:
+    build: .
+    image: backend
+    command: sh entrypoint.sh
+    environment:
+      SECRET_KEY: Local
+      DJANGO_DEBUG: 1
+      ALLOWED_HOSTS: 'localhost'
+      DJANGO_SETTINGS_MODULE: project.settings
+    volumes:
+      - .:/code/
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - redis
+
+  celery:
+    image: backend
+    command: pipenv run celery -A project worker -l info -E
+    environment:
+      REDIS_HOST: redis
+      DJANGO_DEBUG: 1
+      REDIS_BROKER_URL: 'redis://redis:6379/0'
+    volumes:
+      - .:/code/
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  postgres_data:

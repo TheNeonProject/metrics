@@ -1,0 +1,31 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+django-debug-toolbar = "*"
+coverage = "*"
+pylint = "*"
+pylint-django = "*"
+pylint-celery = "*"
+
+[packages]
+djangorestframework = "*"
+django-model-utils = "*"
+djangorestframework-jwt = "*"
+gunicorn = "*"
+whitenoise = "*"
+Django = "*"
+django-sendgrid-v5 = "*"
+dj-database-url = "*"
+sentry-sdk = "*"
+django-storages = "*"
+boto3 = "*"
+newrelic = "*"
+celery = {extras = ["redis"]}
+django-jet = "*"
+psycopg2-binary = "*"
+
+[requires]
+python_version = "3.8"
