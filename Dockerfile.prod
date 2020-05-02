@@ -12,5 +12,7 @@ RUN pip install pipenv
 ADD Pipfile /code/
 RUN pipenv install --system
 
+RUN python manage.py collectstatic --noinput
+
 RUN adduser --disabled-login project
 USER project

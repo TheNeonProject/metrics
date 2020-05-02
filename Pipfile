@@ -26,6 +26,7 @@ newrelic = "*"
 celery = {extras = ["redis"]}
 django-jet = "*"
 psycopg2-binary = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
