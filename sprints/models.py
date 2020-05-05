@@ -21,6 +21,8 @@ class Sprint(TimeStampedModel):
 
     @property
     def percentage_stories_done(self):
+        if self.total_stories == 0:
+            return 0
         return math.trunc((self.stories_done / self.total_stories) * 100)
 
     def __str__(self):
