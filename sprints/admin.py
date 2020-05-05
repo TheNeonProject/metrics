@@ -7,8 +7,15 @@ from .models import Sprint
 
 class SprintAdmin(admin.ModelAdmin):
     list_display = (
-        'started_at', 'number_weeks', 'finished_at', 'percentage_stories_done'
+        'project',
+        'started_at', 'number_weeks', 'finished_at',
+        'total_stories', 'stories_done',
+        'percentage_stories_done',
+        'half_sprint_issues',
+        'total_bugs',
+        'bugs_done', 'last_release'
     )
+    list_filter = ('started_at', 'project')
 
 
 admin.site.register(Sprint, SprintAdmin)

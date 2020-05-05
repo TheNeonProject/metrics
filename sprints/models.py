@@ -1,11 +1,14 @@
 import math
 
 from django.db import models
-
 from model_utils.models import TimeStampedModel
+
+from projects.models import Project
 
 
 class Sprint(TimeStampedModel):
+    project = models.ForeignKey(
+        Project, null=True, blank=True, on_delete=models.PROTECT)
     started_at = models.DateField()
     number_weeks = models.IntegerField(default=1)
     finished_at = models.DateField()
@@ -18,4 +21,8 @@ class Sprint(TimeStampedModel):
 
     @property
     def percentage_stories_done(self):
-        return math.trunc(self.stories_done / self.total_stories) * 100
+        return '{}%'.format(
+            math.trunc((self.stories_done / self.total_stories) * 100))
+
+    def __str__(self):
+        return f'{self.project} sprint started {self.started_at}'
