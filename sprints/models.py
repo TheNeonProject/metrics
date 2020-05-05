@@ -21,8 +21,7 @@ class Sprint(TimeStampedModel):
 
     @property
     def percentage_stories_done(self):
-        return '{}%'.format(
-            math.trunc((self.stories_done / self.total_stories) * 100))
+        return math.trunc((self.stories_done / self.total_stories) * 100)
 
     def __str__(self):
         return f'{self.project} sprint started {self.started_at}'
