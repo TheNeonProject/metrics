@@ -11,14 +11,15 @@ def analyze_current_sprint(modeladmin, request, queryset):
     config = {
         'github_token': settings.GITHUB_TOKEN,
         'jira_user': settings.JIRA_USER,
-        'jira_password': settings.JIRA_PASSWORD
+        'jira_token': settings.JIRA_TOKEN
     }
     projects = Project.objects.filter(finished_at__isnull=True)
-    SprintAnalysis(config).start(projects)
+    SprintAnalysis(config).execute(projects)
 analyze_current_sprint.short_description = 'Analyze current sprint'
 
 
 class SprintAdmin(admin.ModelAdmin):
+    actions = [analyze_current_sprint]
     list_display = (
         'project',
         'started_at', 'number_weeks', 'finished_at',

@@ -166,3 +166,7 @@ if POSTMARK_API_KEY:
 
 # CELERY
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://redis:6379/0')
+
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+JIRA_TOKEN = os.environ.get('JIRA_TOKEN')
+JIRA_USER = os.environ.get('JIRA_USER')

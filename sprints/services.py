@@ -14,15 +14,15 @@ class SprintAnalysis():
         self.jira_user = config['jira_user']
         self.jira_token = config['jira_token']
 
-    def start(self, projects):
-        today = timezone.now()
+    def execute(self, projects):
+        today = timezone.now().date()
 
         for project in projects:
             # In case we're on a planning day, we update the numbers
             # of the finishing sprint, the new sprint shouldn't have any numbers on it
             # probably the first day
             current_sprint = Sprint.objects.filter(
-                project=project, started_at__gte=today, finished_at__lte=today
+                project=project, started_at__lte=today, finished_at__gte=today
             ).order_by('started_at').first()
 
             if not current_sprint:
@@ -77,7 +77,7 @@ class JiraService:
     def perform_query_for_total(self, project_name, query):
         content = requests.post(
             self.ENDPOINT,
-            auth=HTTPBasicAuth(self.jira_user, self.jira_token),
+            auth=HTTPBasicAuth(self.user, self.token),
             json={'jql': query.format(project=project_name)})
         return content.json()['total']
 
@@ -90,7 +90,7 @@ class GithubService:
 
     def get_latest_release_datetime(self, project_name):
         content = requests.get(
-            self.GH_RELEASE.format(project_name=project_name),
+            self.GH_RELEASE_ENDPOINT.format(project_name=project_name),
             headers={'Authorization': f'Token {self.token}'})
         created_at = parse(content.json()['created_at'])
         return created_at
