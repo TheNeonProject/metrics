@@ -9,6 +9,7 @@ class Project(TimeStampedModel):
     finished_at = models.DateField(blank=True, null=True)
     jira_codename = models.CharField(max_length=100)
     github_repository = models.CharField(max_length=100)
+    default_sprint_length_in_weeks = models.IntegerField(default=2)
 
     def __str__(self):
         return f'{self.name}'

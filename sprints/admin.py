@@ -1,7 +1,21 @@
+from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
 
+from projects.models import Project
 from .models import Sprint
+from .services import SprintAnalysis
+
+
+def analyze_current_sprint(modeladmin, request, queryset):
+    config = {
+        'github_token': settings.GITHUB_TOKEN,
+        'jira_user': settings.JIRA_USER,
+        'jira_password': settings.JIRA_PASSWORD
+    }
+    projects = Project.objects.filter(finished_at__isnull=True)
+    SprintAnalysis(config).start(projects)
+analyze_current_sprint.short_description = 'Analyze current sprint'
 
 
 class SprintAdmin(admin.ModelAdmin):

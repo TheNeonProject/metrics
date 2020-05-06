@@ -13,7 +13,7 @@ services:
 
   backend:
     build: .
-    image: backend
+    image: metrics
     command: sh entrypoint.sh
     environment:
       SECRET_KEY: Local
@@ -29,7 +29,7 @@ services:
       - redis
 
   celery:
-    image: backend
+    image: metrics
     command: pipenv run celery -A project worker -l info -E
     environment:
       REDIS_HOST: redis
