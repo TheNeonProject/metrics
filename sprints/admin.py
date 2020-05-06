@@ -27,7 +27,7 @@ class SprintAdmin(admin.ModelAdmin):
         'percentage_stories_done_bar',
         'half_sprint_issues',
         'total_bugs',
-        'bugs_done', 'last_release'
+        'bugs_done', 'tasks_done', 'number_releases', 'last_release'
     )
     list_filter = ('started_at', 'project')
 

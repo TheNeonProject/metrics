@@ -16,8 +16,10 @@ class Sprint(TimeStampedModel):
     stories_done = models.IntegerField(default=0, blank=True, null=True)
     total_bugs = models.IntegerField(default=0, blank=True, null=True)
     bugs_done = models.IntegerField(default=0, blank=True, null=True)
+    tasks_done = models.IntegerField(default=0, blank=True, null=True)
     half_sprint_issues = models.IntegerField(default=0, blank=True, null=True)
     last_release = models.DateField(null=True, blank=True)
+    number_releases = models.IntegerField(default=0, blank=True, null=True)
 
     @property
     def percentage_stories_done(self):

@@ -34,13 +34,20 @@ class SprintAnalysis():
                         days=7 * project.default_sprint_length_in_weeks)
                 )
 
-            current_sprint.last_release = GithubService(self.github_token).get_latest_release_datetime(
-                project.github_repository)
+            github = GithubService(self.github_token)
             jira = JiraService(self.jira_user, self.jira_token)
+
+            current_sprint.last_release = github.get_latest_release_datetime(
+                project.github_repository)
+            current_sprint.number_releases = github.get_release_count(
+                project.github_repository,
+                current_sprint.started_at
+            )
             current_sprint.total_stories = jira.get_total_stories(project.jira_codename)
             current_sprint.stories_done = jira.get_stories_done(project.jira_codename)
             current_sprint.total_bugs = jira.get_all_bugs(project.jira_codename)
             current_sprint.bugs_done = jira.get_bugs_done(project.jira_codename)
+            current_sprint.tasks_done = jira.get_tasks_done(project.jira_codename)
             current_sprint.half_sprint_issues = jira.get_half_sprint_issues(project.jira_codename)
             current_sprint.save()
 
@@ -52,6 +59,7 @@ class JiraService:
     ALL_BUGS = 'project = {project} AND issuetype = Bug AND sprint in openSprints()'
     STORIES_DONE = 'project = {project} AND issuetype = Story AND sprint in openSprints() AND Status = Done'
     BUGS_DONE = 'project = {project} AND issuetype = Bug AND sprint in openSprints() AND Status = Done'
+    TASKS_DONE = 'project = {project} AND issuetype = Task AND sprint in openSprints() AND Status = Done'
     HALF_SPRINT_ISSUES = "project = {project} AND sprint in openSprints() AND labels = 'unplanned'"
 
     def __init__(self, user, token):
@@ -68,6 +76,9 @@ class JiraService:
     def get_bugs_done(self, project_name):
         return self.perform_query_for_total(project_name, self.BUGS_DONE)
 
+    def get_tasks_done(self, project_name):
+        return self.perform_query_for_total(project_name, self.TASKS_DONE)
+
     def get_all_bugs(self, project_name):
         return self.perform_query_for_total(project_name, self.ALL_BUGS)
 
@@ -83,14 +94,32 @@ class JiraService:
 
 
 class GithubService:
-    GH_RELEASE_ENDPOINT = 'https://api.github.com/repos/TheNeonProject/{project_name}/releases/latest'
+    GH_LATEST_RELEASE_ENDPOINT = 'https://api.github.com/repos/TheNeonProject/{project_name}/releases/latest'
+    GH_LIST_RELEASES_ENDPOINT = 'https://api.github.com/repos/TheNeonProject/{project_name}/releases'
 
     def __init__(self, token):
         self.token = token
 
     def get_latest_release_datetime(self, project_name):
         content = requests.get(
-            self.GH_RELEASE_ENDPOINT.format(project_name=project_name),
+            self.GH_LATEST_RELEASE_ENDPOINT.format(project_name=project_name),
             headers={'Authorization': f'Token {self.token}'})
         created_at = parse(content.json()['created_at'])
         return created_at
+
+    def get_release_count(self, project_name, started_sprint_date):
+        release_count = 0
+
+        content = requests.get(
+            self.GH_LIST_RELEASES_ENDPOINT.format(project_name=project_name),
+            headers={'Authorization': f'Token {self.token}'})
+
+        for item in content.json():
+            created_at_release = parse(item['created_at'])
+
+            if created_at_release.date() >= started_sprint_date:
+                release_count += 1
+            else:
+                break
+
+        return release_count
