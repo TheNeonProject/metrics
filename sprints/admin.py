@@ -1,20 +1,14 @@
 from django.conf import settings
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.html import format_html
 
-from projects.models import Project
 from .models import Sprint
-from .services import SprintAnalysis
+from .tasks import analyze_sprint
 
 
 def analyze_current_sprint(modeladmin, request, queryset):
-    config = {
-        'github_token': settings.GITHUB_TOKEN,
-        'jira_user': settings.JIRA_USER,
-        'jira_token': settings.JIRA_TOKEN
-    }
-    projects = Project.objects.filter(finished_at__isnull=True)
-    SprintAnalysis(config).execute(projects)
+    messages.success(request, 'Analyzing...')
+    analyze_sprint.delay()
 analyze_current_sprint.short_description = 'Analyze current sprint'
 
 
