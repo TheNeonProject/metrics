@@ -164,8 +164,18 @@ if POSTMARK_API_KEY:
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
 
+# -----------------------------------------------------------------------------
 # CELERY
+# -----------------------------------------------------------------------------
+
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://redis:6379/0')
+CELERY_TASK_ALWAYS_EAGER = False
+CELERY_TASK_EAGER_PROPAGATES = False
+CELERY_REDIS_MAX_CONNECTIONS = os.environ.get('CELERY_REDIS_MAX_CONNECTIONS', 20)
+CELERY_TASK_ACKS_LATE = True
+CELERY_WORKER_MAX_TASKS_PER_CHILD = os.environ.get('CELERY_WORKER_MAX_TASKS_PER_CHILD', 50)
+CELERY_WORKER_MAX_MEMORY_PER_CHILD = os.environ.get('CELERY_WORKER_MAX_MEMORY_PER_CHILD', 100 * 1000)  # KB
+CELERY_WORKER_CONCURRENCY = os.environ.get('CELERY_WORKER_CONCURRENCY', 4)
 
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 JIRA_TOKEN = os.environ.get('JIRA_TOKEN')

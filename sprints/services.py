@@ -104,7 +104,12 @@ class GithubService:
         content = requests.get(
             self.GH_LATEST_RELEASE_ENDPOINT.format(project_name=project_name),
             headers={'Authorization': f'Token {self.token}'})
-        created_at = parse(content.json()['created_at'])
+
+        try:
+            created_at = parse(content.json()['created_at'])
+        except KeyError:
+            return ''
+
         return created_at
 
     def get_release_count(self, project_name, started_sprint_date):
@@ -115,7 +120,10 @@ class GithubService:
             headers={'Authorization': f'Token {self.token}'})
 
         for item in content.json():
-            created_at_release = parse(item['created_at'])
+            try:
+                created_at_release = parse(item['created_at'])
+            except (KeyError, TypeError):
+                return 0
 
             if created_at_release.date() >= started_sprint_date:
                 release_count += 1

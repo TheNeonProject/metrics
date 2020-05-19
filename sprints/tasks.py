@@ -1,11 +1,12 @@
-from django.conf import settings
+from celery import shared_task
 from celery.decorators import task
+from django.conf import settings
 
 from sprints.services import SprintAnalysis
 from projects.models import Project
 
 
-@task(name='analyze_sprint')
+@shared_task
 def analyze_sprint():
     config = {
         'github_token': settings.GITHUB_TOKEN,
