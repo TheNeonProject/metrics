@@ -10,6 +10,7 @@ class Project(TimeStampedModel):
     jira_codename = models.CharField(max_length=100)
     github_repository = models.CharField(max_length=100)
     default_sprint_length_in_weeks = models.IntegerField(default=2)
+    number_team_members = models.IntegerField(default=1)
 
     def __str__(self):
         return f'{self.name}'

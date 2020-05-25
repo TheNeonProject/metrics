@@ -30,6 +30,7 @@ class SprintAnalysis():
                     project=project,
                     started_at=today,
                     number_weeks=project.default_sprint_length_in_weeks,
+                    number_team_members=project.number_team_members,
                     finished_at=today + timedelta(
                         days=7 * project.default_sprint_length_in_weeks)
                 )

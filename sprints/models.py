@@ -20,6 +20,7 @@ class Sprint(TimeStampedModel):
     half_sprint_issues = models.IntegerField(default=0, blank=True, null=True)
     last_release = models.DateField(null=True, blank=True)
     number_releases = models.IntegerField(default=0, blank=True, null=True)
+    number_team_members = models.IntegerField(default=1)
 
     @property
     def percentage_stories_done(self):
