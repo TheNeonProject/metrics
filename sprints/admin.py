@@ -16,12 +16,11 @@ class SprintAdmin(admin.ModelAdmin):
     actions = [analyze_current_sprint]
     list_display = (
         'project',
-        'started_at', 'number_weeks', 'finished_at',
-        'total_stories', 'stories_done',
+        'number_team_members',
+        'started_at', 'number_weeks', 'finished_at'
+        'stories_done',
         'percentage_stories_done_bar',
-        'half_sprint_issues',
-        'total_bugs',
-        'bugs_done', 'tasks_done', 'number_releases', 'last_release'
+        'number_releases', 'last_release'
     )
     list_filter = ('started_at', 'project')
 
