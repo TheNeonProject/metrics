@@ -17,7 +17,7 @@ class SprintAdmin(admin.ModelAdmin):
     list_display = (
         'project',
         'number_team_members',
-        'started_at', 'number_weeks', 'finished_at'
+        'started_at', 'number_weeks', 'finished_at',
         'stories_done',
         'percentage_stories_done_bar',
         'number_releases', 'last_release'
