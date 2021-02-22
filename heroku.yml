@@ -4,7 +4,7 @@ build:
     celery: Dockerfile.prod
 run:
   web: gunicorn project.wsgi --limit-request-line 8188 --log-file -
-  celery: celery worker -A project --loglevel=info
+  celery: celery --app=project --loglevel=info worker
 release:
   image: web
   command:
