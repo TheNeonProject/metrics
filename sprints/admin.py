@@ -12,7 +12,12 @@ def analyze_current_sprint(modeladmin, request, queryset):
 analyze_current_sprint.short_description = 'Analyze current sprint'
 
 
+class SprintMemberInline(admin.TabularInline):
+    model = Sprint.members.through
+
+
 class SprintAdmin(admin.ModelAdmin):
+    inlines = [SprintMemberInline]
     actions = [analyze_current_sprint]
     list_display = (
         'project',
