@@ -6,6 +6,12 @@ from model_utils.models import TimeStampedModel
 from projects.models import Project
 
 
+class SprintMember(TimeStampedModel):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    dedication_percentage = models.IntegerField()
+
+
 class Sprint(TimeStampedModel):
     project = models.ForeignKey(
         Project, null=True, blank=True, on_delete=models.PROTECT)
@@ -20,7 +26,11 @@ class Sprint(TimeStampedModel):
     half_sprint_issues = models.IntegerField(default=0, blank=True, null=True)
     last_release = models.DateField(null=True, blank=True)
     number_releases = models.IntegerField(default=0, blank=True, null=True)
-    number_team_members = models.IntegerField(default=1)
+    members = models.ManyToManyField(SprintMember)
+
+    @property
+    def number_team_members(self):
+        return self.members.count()
 
     @property
     def percentage_stories_done(self):
