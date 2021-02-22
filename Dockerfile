@@ -3,11 +3,14 @@ FROM python:3.8-slim
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /code
-
 WORKDIR /code
 
-RUN pip install pipenv
-RUN pipenv --python 3.8
-ADD Pipfile /code/
-RUN pipenv install --dev
+ADD pyproject.toml poetry.lock /code/
+
+# Get deps for building some python packages and install deps
+RUN pip install --upgrade pip && \
+    pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install
+
+EXPOSE 8000

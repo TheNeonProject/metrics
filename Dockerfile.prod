@@ -8,11 +8,16 @@ RUN mkdir /code
 WORKDIR /code
 COPY . /code/
 
-RUN pip install pipenv
-ADD Pipfile /code/
-RUN pipenv install --system
 
+RUN pip install --upgrade pip
+RUN pip install poetry
+RUN poetry config virtualenvs.create false
+ADD pyproject.toml poetry.lock /code/
+RUN poetry install
 RUN python manage.py collectstatic --noinput
 
-RUN adduser --disabled-login project
-USER project
+RUN adduser --disabled-login myuser && \
+    chown -R myuser /code
+USER myuser
+
+EXPOSE 8000
