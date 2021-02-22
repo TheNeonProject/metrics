@@ -21,23 +21,33 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - uses: actions/setup-python@v1
-      with:
-        python-version: '3.8'
-        architecture: 'x64'
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+          architecture: "x64"
 
-    - name: Install deps
-      run: |
-        pip3 install pipenv
+      - name: Set up poetry
+        run: |
+          pip3 install poetry
+          poetry config virtualenvs.create true
+          poetry config cache-dir
 
-    - name: Run tests
-      run: |
-        pipenv install --dev
-        pipenv run coverage run --source='.' manage.py test
-      env:
-        PIPENV_VENV_IN_PROJECT: true
-        SECRET_KEY: Test
-        DJANGO_SETTINGS_MODULE: project.settings_test
-        DATABASE_URL: postgresql://postgres:postgres@postgres:${{ job.services.postgres.ports[5432] }}/postgres?sslmode=disable
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: poetry-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            poetry-${{ runner.os }}-
+
+      - name: install deps
+        run: |
+          poetry run pip install --upgrade pip
+          poetry install
+
+      - name: Run tests
+        run: poetry run coverage run --source='.' manage.py test --parallel
+        env:
+          DJANGO_SETTINGS_MODULE: project.settings_test
+          DATABASE_URL: postgresql://postgres:postgres@postgres:${{ job.services.postgres.ports[5432] }}/postgres?sslmode=disable
