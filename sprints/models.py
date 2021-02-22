@@ -9,7 +9,9 @@ from projects.models import Project
 class SprintMember(TimeStampedModel):
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    dedication_percentage = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Sprint(TimeStampedModel):
@@ -31,6 +33,10 @@ class Sprint(TimeStampedModel):
     @property
     def number_team_members(self):
         return self.members.count()
+
+    @property
+    def member_names(self):
+        return ', '.join([member.name for member in self.members.all()])
 
     @property
     def percentage_stories_done(self):

@@ -54,7 +54,7 @@ class SprintAnalysis():
 
 
 class JiraService:
-    ENDPOINT = 'https://theneonproject.atlassian.net/rest/api/3/search'
+    ENDPOINT = 'https://wealize.atlassian.net/rest/api/3/search'
 
     ALL_STORIES = 'project = {project} AND issuetype = Story AND sprint in openSprints()'
     ALL_BUGS = 'project = {project} AND issuetype = Bug AND sprint in openSprints()'
@@ -132,3 +132,19 @@ class GithubService:
                 break
 
         return release_count
+
+
+class SprintCloneService():
+    @staticmethod
+    def clone_sprint(sprint):
+        today = timezone.now().date()
+
+        members = sprint.members.all()
+
+        sprint.pk = None
+        sprint.started_at = today
+        sprint.save()
+
+        # Many to many need to be saved once we have a new id
+        sprint.members.set(members)
+        sprint.save()

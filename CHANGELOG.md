@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Move to Poetry
 - Add SprintMembers to Sprints
+- Clone sprint Admin action
 
 ## 2020.05.06
 
