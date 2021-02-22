@@ -95,8 +95,8 @@ class JiraService:
 
 
 class GithubService:
-    GH_LATEST_RELEASE_ENDPOINT = 'https://api.github.com/repos/TheNeonProject/{project_name}/releases/latest'
-    GH_LIST_RELEASES_ENDPOINT = 'https://api.github.com/repos/TheNeonProject/{project_name}/releases'
+    GH_LATEST_RELEASE_ENDPOINT = 'https://api.github.com/repos/Wealize/{project_name}/releases/latest'
+    GH_LIST_RELEASES_ENDPOINT = 'https://api.github.com/repos/Wealize/{project_name}/releases'
 
     def __init__(self, token):
         self.token = token
